@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FuelRoute Pro — Fleet Fuel Optimizer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#0a0c0e;--bg2:#111416;--bg3:#181c1f;
+  --border:#252a2e;--border2:#2e3438;
+  --amber:#f5a623;--amber2:#ffbb4d;--amber-dim:rgba(245,166,35,0.12);--amber-glow:rgba(245,166,35,0.3);
+  --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
+  --red:#ef4444;--red-dim:rgba(239,68,68,0.1);
+  --blue:#38bdf8;--blue-dim:rgba(56,189,248,0.1);
+  --text:#e8eaec;--text2:#8a9099;--text3:#555c63;
+}
+html,body{
+  background:var(--bg);color:var(--text);
+  font-family:'IBM Plex Sans',system-ui,sans-serif;
+  font-size:14px;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ═══════════════════════════════════════════════
+   HERO
+═══════════════════════════════════════════════ */
+.hero{
+  position:relative;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% -10%,rgba(245,166,35,0.18) 0%,transparent 60%),
+    radial-gradient(ellipse 40% 30% at 80% 80%,rgba(34,197,94,0.06) 0%,transparent 50%),
+    var(--bg);
+  border-bottom:1px solid var(--border);
+  padding:64px 32px 56px;
+  text-align:center;
+  overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    repeating-linear-gradient(transparent,transparent 39px,rgba(37,42,46,0.25) 39px,rgba(37,42,46,0.25) 40px),
+    repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(37,42,46,0.25) 39px,rgba(37,42,46,0.25) 40px);
+  pointer-events:none;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--amber-dim);border:1px solid rgba(245,166,35,0.3);border-radius:20px;
+  padding:5px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--amber);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:24px;
+}
+.hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);animation:pulse 2s infinite;}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;font-size:clamp(48px,8vw,82px);
+  letter-spacing:4px;line-height:1;
+  background:linear-gradient(135deg,#fff 0%,var(--amber) 50%,#ffdd99 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:16px;
+}
+.hero-sub{
+  font-size:clamp(15px,2vw,19px);color:var(--text2);font-weight:300;
+  max-width:600px;margin:0 auto 36px;line-height:1.6;
+}
+.hero-sub strong{color:var(--text);font-weight:500;}
+.hero-stats{
+  display:flex;align-items:center;justify-content:center;gap:0;
+  flex-wrap:wrap;margin-bottom:36px;
+}
+.hstat{
+  padding:14px 32px;border-right:1px solid var(--border);
+  text-align:center;
+}
+.hstat:last-child{border-right:none;}
+.hstat-v{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:2px;color:var(--amber);line-height:1;}
+.hstat-l{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:1.5px;text-transform:uppercase;margin-top:4px;}
+.hero-chips{display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;}
+.chip{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:20px;
+  padding:6px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--text2);letter-spacing:1px;
+}
+.chip.green{background:var(--green-dim);border-color:rgba(34,197,94,0.25);color:var(--green);}
+.chip.amber{background:var(--amber-dim);border-color:rgba(245,166,35,0.25);color:var(--amber);}
+
+/* ═══════════════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════════════ */
+.how{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:48px 32px;
+}
+.section-label{
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:3px;
+  color:var(--amber);text-transform:uppercase;text-align:center;margin-bottom:10px;
+}
+.section-title{
+  font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:2px;
+  color:var(--text);text-align:center;margin-bottom:40px;
+}
+.steps{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1px;background:var(--border);max-width:1000px;margin:0 auto;
+  border:1px solid var(--border);border-radius:10px;overflow:hidden;
+}
+.step{
+  background:var(--bg2);padding:28px 24px;position:relative;
+}
+.step-num{
+  font-family:'Bebas Neue',sans-serif;font-size:11px;letter-spacing:2px;
+  color:var(--amber);margin-bottom:12px;
+}
+.step-icon{font-size:28px;margin-bottom:12px;display:block;}
+.step-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.step-body{font-size:12px;color:var(--text2);line-height:1.6;}
+
+/* ═══════════════════════════════════════════════
+   FEATURE ROW
+═══════════════════════════════════════════════ */
+.features{
+  padding:48px 32px;border-bottom:1px solid var(--border);
+}
+.feat-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;max-width:1100px;margin:0 auto;
+}
+.fcard{
+  background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:24px;transition:border-color 0.2s,transform 0.15s;
+}
+.fcard:hover{border-color:var(--border2);transform:translateY(-2px);}
+.fcard-icon{font-size:24px;margin-bottom:14px;}
+.fcard-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:8px;}
+.fcard-body{font-size:12px;color:var(--text2);line-height:1.65;}
+.fcard-body strong{color:var(--amber);}
+
+/* ═══════════════════════════════════════════════
+   SUPPORTED PLATFORMS
+═══════════════════════════════════════════════ */
+.platforms{
+  background:var(--bg2);border-bottom:1px solid var(--border);
+  padding:32px;text-align:center;
+}
+.plat-list{
+  display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:10px;margin-top:18px;
+}
+.plat-tag{
+  background:var(--bg3);border:1px solid var(--border2);border-radius:6px;
+  padding:7px 16px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:var(--text2);letter-spacing:1px;
+}
+
+/* ═══════════════════════════════════════════════
+   DEMO SECTION
+═══════════════════════════════════════════════ */
+.demo-section{
+  padding:56px 32px 72px;
+  background:
+    radial-gradient(ellipse 60% 40% at 50% 100%,rgba(245,166,35,0.06) 0%,transparent 60%),
+    var(--bg);
+}
+.demo-section .section-label{margin-bottom:8px;}
+.demo-section .section-title{margin-bottom:8px;}
+.demo-caption{
+  font-size:13px;color:var(--text3);text-align:center;
+  font-family:'IBM Plex Mono',monospace;letter-spacing:1px;margin-bottom:40px;
+}
+.demo-wrap{
+  display:flex;gap:32px;align-items:flex-start;
+  justify-content:center;flex-wrap:wrap;
+}
+
+/* ═══════════════════════════════════════════════
+   CHROME WINDOW
+═══════════════════════════════════════════════ */
+.chrome-win{display:flex;flex-direction:column;}
+.win-label{
+  font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;
+  color:var(--text3);text-transform:uppercase;text-align:center;margin-bottom:8px;
+}
+.chrome-bar{
+  background:#1a1d20;border-radius:10px 10px 0 0;padding:10px 14px;
+  display:flex;align-items:center;gap:8px;border:1px solid #2a2e32;border-bottom:none;
+}
+.dot-r{width:12px;height:12px;border-radius:50%;background:#ef4444;}
+.dot-y{width:12px;height:12px;border-radius:50%;background:#f5a623;}
+.dot-g{width:12px;height:12px;border-radius:50%;background:#22c55e;}
+.url-bar{
+  flex:1;background:#252a2e;border-radius:5px;padding:5px 12px;
+  font-family:'IBM Plex Mono',monospace;font-size:11px;color:#666;margin:0 8px;
+  display:flex;align-items:center;gap:6px;
+}
+.url-lock{color:var(--green);font-size:10px;}
+.toolbar-ext{
+  width:28px;height:28px;background:var(--amber);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+  cursor:pointer;flex-shrink:0;transition:background 0.15s;border:none;outline:none;
+  position:relative;
+}
+.toolbar-ext:hover{background:var(--amber2);}
+.ext-tooltip{
+  position:absolute;bottom:-28px;right:0;
+  background:#222;color:#fff;font-size:10px;white-space:nowrap;
+  padding:3px 8px;border-radius:4px;opacity:0;pointer-events:none;
+  transition:opacity 0.15s;font-family:'IBM Plex Mono',monospace;
+}
+.toolbar-ext:hover .ext-tooltip{opacity:1;}
+
+/* ── POPUP PANEL ── */
+.popup-panel{
+  width:340px;background:var(--bg2);
+  border:1px solid var(--border2);border-radius:0 0 10px 10px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.7);overflow:hidden;
+}
+.pop-hdr{
+  background:linear-gradient(135deg,var(--bg2),#151a1e);
+  border-bottom:1px solid var(--border2);
+  padding:14px 16px;display:flex;align-items:center;gap:10px;
+}
+.logo-icon{width:34px;height:34px;background:var(--amber);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.logo-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;}
+.logo-sub{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--amber);letter-spacing:2px;margin-top:-2px;}
+.pop-body{padding:16px;}
+
+.status-row{
+  display:flex;align-items:center;gap:8px;padding:10px 12px;
+  border:1px solid var(--border2);border-radius:7px;margin-bottom:16px;
+  background:var(--bg3);transition:border-color 0.3s;
+}
+.status-row.active{border-color:rgba(34,197,94,0.3);background:var(--green-dim);}
+.sdot{width:7px;height:7px;border-radius:50%;background:var(--text3);transition:all 0.3s;}
+.sdot.green{background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse 2s infinite;}
+.sdot.amber{background:var(--amber);animation:pulse 2s infinite;}
+.stxt{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;color:var(--text3);transition:color 0.3s;}
+.stxt.green{color:var(--green);}
+.stxt.amber{color:var(--amber);}
+
+.psec{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:8px;}
+
+.key-display{
+  background:var(--bg3);border:1px solid rgba(34,197,94,0.2);border-radius:6px;
+  padding:9px 12px;font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--green);
+  letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;
+}
+.pfield{margin-bottom:10px;}
+.pfield label{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
+.pfield input,.pfield select{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);
+  border-radius:6px;padding:8px 10px;color:var(--text);
+  font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;transition:border-color 0.2s;
+}
+.pfield input:focus{border-color:var(--amber);}
+
+.btn-primary{
+  width:100%;background:var(--amber);border:none;border-radius:6px;
+  padding:10px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;
+  color:#0a0c0e;cursor:pointer;transition:all 0.15s;margin-bottom:8px;
+}
+.btn-primary:hover{background:var(--amber2);box-shadow:0 0 16px var(--amber-glow);}
+.btn-primary:active{transform:scale(0.98);}
+.btn-row-2{display:flex;gap:8px;}
+.btn-sec{
+  flex:1;background:none;border:1px solid var(--border2);border-radius:6px;
+  padding:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;
+  color:var(--text3);cursor:pointer;transition:all 0.15s;
+}
+.btn-sec:hover{border-color:var(--amber);color:var(--amber);}
+.btn-danger{
+  flex:1;background:none;border:1px solid rgba(239,68,68,0.3);border-radius:6px;
+  padding:8px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:1px;
+  color:var(--red);cursor:pointer;transition:all 0.15s;
+}
+.btn-danger:hover{background:var(--red-dim);}
+.pdivider{height:1px;background:var(--border);margin:14px 0;}
+.pfooter{border-top:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.pfooter a{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);text-decoration:none;letter-spacing:1px;}
+.pfooter a:hover{color:var(--amber);}
+.ver{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
+
+/* ── TMS WINDOW ── */
+.tms-win{
+  width:820px;background:#141618;
+  border:1px solid #2a2e32;border-radius:0 0 10px 10px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  position:relative;overflow:hidden;height:720px;
+}
+.tms-nav{
+  background:#0d0f11;border-bottom:1px solid #1e2226;
+  padding:0 20px;display:flex;align-items:center;gap:2px;
+}
+.nav-logo{
+  font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;
+  color:var(--amber);padding:14px 16px 14px 0;margin-right:8px;border-right:1px solid var(--border);
+}
+.nav-item{
+  padding:14px 16px;font-size:12px;font-weight:500;color:#555;cursor:pointer;
+  border-bottom:2px solid transparent;transition:all 0.15s;user-select:none;letter-spacing:0.3px;
+}
+.nav-item:hover{color:#8a9099;}
+.nav-item.active{color:var(--text);border-bottom-color:var(--amber);}
+.tms-body{padding:28px;width:calc(100% - 360px);height:calc(100% - 49px);overflow-y:auto;}
+.form-title{
+  font-size:17px;font-weight:600;color:var(--text);margin-bottom:6px;
+  display:flex;align-items:center;gap:10px;
+}
+.form-sub{font-size:12px;color:var(--text3);margin-bottom:22px;}
+.badge{
+  background:rgba(245,166,35,0.12);border:1px solid rgba(245,166,35,0.25);
+  border-radius:4px;padding:2px 8px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--amber);letter-spacing:1px;
+}
+.tms-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;}
+.tf label{display:block;font-size:11px;font-weight:500;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;}
+.tinput{
+  width:100%;background:#0f1113;border:1px solid #1e2226;border-radius:6px;
+  padding:10px 12px;color:var(--text);font-size:13px;font-family:'IBM Plex Sans',sans-serif;
+  outline:none;transition:border-color 0.2s,box-shadow 0.2s;
+}
+.tinput:focus{border-color:var(--amber);box-shadow:0 0 0 2px rgba(245,166,35,0.1);}
+.tinput.lit{border-color:rgba(245,166,35,0.5);box-shadow:0 0 0 2px rgba(245,166,35,0.08);}
+.hint{
+  margin-top:4px;font-family:'IBM Plex Mono',monospace;font-size:9px;
+  color:var(--amber);letter-spacing:1px;display:flex;align-items:center;gap:4px;
+  opacity:0;transform:translateY(-4px);transition:all 0.3s;
+}
+.hint.show{opacity:1;transform:translateY(0);}
+.tms-actions{display:flex;gap:10px;margin-top:24px;}
+.tsave{
+  flex:1;background:var(--amber);border:none;border-radius:6px;
+  padding:10px;font-family:'Bebas Neue',sans-serif;font-size:14px;letter-spacing:2px;
+  color:#0a0c0e;cursor:pointer;transition:all 0.15s;
+}
+.tsave:hover{background:var(--amber2);}
+.tsave:active{transform:scale(0.98);}
+.tcancel{
+  flex:1;background:transparent;border:1px solid #252a2e;border-radius:6px;
+  padding:10px;font-family:'IBM Plex Mono',monospace;font-size:11px;
+  color:var(--text3);cursor:pointer;transition:all 0.15s;letter-spacing:0.5px;
+}
+.tcancel:hover{border-color:var(--text3);color:var(--text2);}
+
+/* ── SIDEBAR ── */
+.sb-host{
+  position:absolute;top:0;right:0;bottom:0;width:48px;
+  display:flex;transition:width 0.3s cubic-bezier(0.4,0,0.2,1);
+  z-index:999;
+}
+.sb-host.open{width:360px;}
+.sb-tab{
+  position:absolute;left:-36px;top:50%;
+  background:var(--amber);color:#0a0c0e;
+  writing-mode:vertical-rl;text-orientation:mixed;
+  transform:translateY(-50%) rotate(180deg);
+  padding:14px 8px;border-radius:8px 0 0 8px;
+  font-size:11px;font-weight:700;letter-spacing:2px;
+  cursor:pointer;user-select:none;
+  box-shadow:-2px 0 16px rgba(245,166,35,0.25);
+  transition:background 0.15s,box-shadow 0.2s;
+  border:none;outline:none;
+}
+.sb-tab:hover{background:var(--amber2);box-shadow:-2px 0 24px rgba(245,166,35,0.45);}
+.sb-panel{
+  width:360px;height:100%;background:var(--bg);display:flex;flex-direction:column;
+  overflow:hidden;box-shadow:-6px 0 32px rgba(0,0,0,0.5);
+}
+.sb-hdr{
+  background:linear-gradient(135deg,var(--bg2),#141a1e);
+  border-bottom:1px solid var(--border2);
+  padding:12px 14px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.sb-logo{display:flex;align-items:center;gap:8px;}
+.sb-logo-ic{width:28px;height:28px;background:var(--amber);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.sb-logo-n{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:2px;}
+.sb-logo-s{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--amber);letter-spacing:2px;margin-top:-2px;}
+.live-pill{
+  display:flex;align-items:center;gap:5px;
+  background:var(--green-dim);border:1px solid rgba(34,197,94,0.2);
+  border-radius:10px;padding:3px 8px;
+  font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--green);letter-spacing:1px;
+}
+.live-dot{width:5px;height:5px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;}
+
+.plat-banner{
+  background:var(--green-dim);border-bottom:1px solid rgba(34,197,94,0.15);
+  padding:7px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;
+  color:var(--green);letter-spacing:1px;display:none;align-items:center;gap:6px;flex-shrink:0;
+}
+.plat-banner.show{display:flex;animation:fadeIn 0.4s ease;}
+
+.tabs{display:flex;border-bottom:1px solid var(--border2);flex-shrink:0;background:#0d0f11;}
+.tbtn{
+  flex:1;padding:10px 4px;font-family:'IBM Plex Mono',monospace;font-size:9px;
+  letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);
+  background:none;border:none;border-bottom:2px solid transparent;
+  cursor:pointer;transition:all 0.15s;margin-bottom:-1px;
+}
+.tbtn:hover{color:var(--text2);}
+.tbtn.active{color:var(--amber);border-bottom-color:var(--amber);}
+
+.sb-body{flex:1;overflow-y:auto;padding:14px;}
+.sb-body::-webkit-scrollbar{width:3px;}
+.sb-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* sidebar form */
+.sf{margin-bottom:10px;}
+.sf label{display:block;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;margin-bottom:5px;}
+.sf input,.sf select{
+  width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:5px;
+  padding:8px 10px;color:var(--text);font-family:'IBM Plex Mono',monospace;font-size:12px;outline:none;transition:border-color 0.2s;
+}
+.sf input:focus,.sf select:focus{border-color:var(--amber);}
+.sf select option{background:var(--bg3);}
+.sf2{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.auto-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:var(--amber-dim);border:1px solid rgba(245,166,35,0.2);
+  border-radius:4px;padding:3px 8px;font-family:'IBM Plex Mono',monospace;
+  font-size:9px;color:var(--amber);letter-spacing:1px;margin-bottom:10px;
+}
+.fill-row{display:flex;justify-content:space-between;align-items:center;margin:6px 0;}
+.fill-label{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;}
+.fill-val{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--amber);letter-spacing:1px;}
+
+.run-btn{
+  width:100%;background:var(--amber);border:none;border-radius:7px;
+  padding:12px;font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px;
+  color:#0a0c0e;cursor:pointer;transition:all 0.2s;
+  display:flex;align-items:center;justify-content:center;gap:6px;margin-top:4px;
+}
+.run-btn:hover:not(:disabled){background:var(--amber2);box-shadow:0 0 24px var(--amber-glow);}
+.run-btn:active:not(:disabled){transform:scale(0.98);}
+.run-btn:disabled{opacity:0.5;cursor:not-allowed;}
+
+.sb-divider{height:1px;background:var(--border);margin:12px 0;}
+.sb-sec{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text3);text-transform:uppercase;margin-bottom:10px;}
+
+/* spinner + progress */
+.loading-wrap{display:none;flex-direction:column;align-items:center;padding:32px 16px 24px;gap:0;}
+.loading-wrap.show{display:flex;animation:fadeIn 0.3s ease;}
+.spinner-ring{
+  width:44px;height:44px;position:relative;margin-bottom:20px;
+}
+.spinner-ring::before{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:3px solid var(--border2);
+}
+.spinner-ring::after{
+  content:'';position:absolute;inset:0;border-radius:50%;
+  border:3px solid transparent;border-top-color:var(--amber);
+  animation:spin 0.7s linear infinite;
+}
+.load-steps{width:100%;display:flex;flex-direction:column;gap:8px;}
+.lstep{
+  display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.5px;
+  color:var(--text3);background:var(--bg3);border:1px solid var(--border);
+  transition:all 0.3s;
+}
+.lstep.active{color:var(--amber);border-color:rgba(245,166,35,0.25);background:var(--amber-dim);}
+.lstep.done{color:var(--green);border-color:rgba(34,197,94,0.2);background:var(--green-dim);}
+.lstep-icon{font-size:12px;width:16px;text-align:center;flex-shrink:0;}
+
+/* results */
+.results-wrap{display:none;}
+.results-wrap.show{display:block;animation:fadeIn 0.35s ease;}
+
+.rec-box{
+  background:linear-gradient(135deg,rgba(34,197,94,0.07),rgba(34,197,94,0.02));
+  border:1px solid rgba(34,197,94,0.2);border-radius:8px;padding:12px 14px;margin-bottom:14px;
+}
+.rec-title{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:6px;display:flex;align-items:center;gap:6px;}
+.rec-body{font-size:12px;color:var(--text2);line-height:1.65;}
+.rec-body strong{color:var(--amber);}
+
+/* station cards */
+.scard{
+  background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;margin-bottom:7px;
+  transition:border-color 0.2s,transform 0.15s,box-shadow 0.15s;
+  cursor:default;
+}
+.scard:hover{transform:translateX(-2px);box-shadow:2px 0 12px rgba(0,0,0,0.3);}
+.scard.best{border-color:rgba(34,197,94,0.3);background:linear-gradient(135deg,rgba(34,197,94,0.05),transparent);}
+.scard.best:hover{border-color:rgba(34,197,94,0.5);}
+.scard-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px;}
+.scard-left{flex:1;min-width:0;}
+.scard-name{font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.scard-loc{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+.scard-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;flex-shrink:0;margin-left:8px;}
+.scard-price{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1;}
+.pg{color:var(--green);} .pa{color:var(--amber);} .pd{color:var(--text2);}
+.scard-bot{display:flex;align-items:center;justify-content:space-between;}
+.net{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;}
+.net-pos{color:var(--green);} .net-neg{color:var(--red);}
+.detour-lbl{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
+.rbadge{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;flex-shrink:0;}
+.r1{background:var(--green-dim);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
+.r2{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(245,166,35,0.3);}
+.r3{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(56,189,248,0.3);}
+.rn{background:var(--bg3);color:var(--text3);border:1px solid var(--border);}
+.atags{display:flex;gap:4px;flex-wrap:wrap;margin-top:5px;}
+.atag{background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
+.scard.uneconomical{border-color:rgba(239,68,68,0.2);opacity:0.85;}
+.warn-badge{display:inline-block;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:3px;padding:2px 6px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--red);letter-spacing:1px;margin-top:4px;}
+
+/* reefer */
+.reefer-row{display:flex;align-items:center;gap:8px;padding:4px 0;margin-bottom:4px;}
+.toggle-chk{width:14px;height:14px;accent-color:var(--amber);cursor:pointer;flex-shrink:0;}
+.toggle-lbl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text2);letter-spacing:1px;cursor:pointer;user-select:none;}
+.reefer-fields{background:rgba(245,166,35,0.04);border:1px solid rgba(245,166,35,0.15);border-radius:5px;padding:8px 10px;margin-bottom:8px;}
+.reefer-note{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:5px;line-height:1.5;letter-spacing:0.3px;}
+
+/* log tab */
+.log-sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.lsc{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:10px 12px;}
+.lsc-l{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:4px;}
+.lsc-v{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;line-height:1;}
+.lsc-v.g{color:var(--green);}.lsc-v.a{color:var(--amber);}.lsc-v.b{color:var(--blue);}
+.lsc-s{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--text3);margin-top:3px;}
+.ann-box{background:linear-gradient(135deg,rgba(34,197,94,0.07),rgba(34,197,94,0.02));border:1px solid rgba(34,197,94,0.2);border-radius:7px;padding:12px 14px;margin-bottom:14px;}
+.ann-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--green);text-transform:uppercase;margin-bottom:5px;}
+.ann-val{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:2px;color:var(--green);line-height:1;margin-bottom:3px;}
+.ann-sub{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
+.log-entry{background:var(--bg2);border:1px solid var(--border);border-radius:6px;padding:9px 10px;margin-bottom:6px;display:flex;align-items:flex-start;gap:8px;}
+.log-body{flex:1;min-width:0;}
+.log-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:3px;}
+.log-date{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);}
+.log-net{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--green);}
+.log-stn{font-size:12px;font-weight:500;color:var(--text);}
+.log-route{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+.log-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:2px;}
+
+/* savings */
+.save-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;}
+.sc{background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:12px;}
+.sc-l{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;}
+.sc-v{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;line-height:1;}
+.sc-v.g{color:var(--green);} .sc-v.a{color:var(--amber);} .sc-v.b{color:var(--blue);}
+.sc-s{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--text3);margin-top:4px;}
+
+/* ═══════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════ */
+.site-footer{
+  background:var(--bg2);border-top:1px solid var(--border);
+  padding:32px;text-align:center;
+}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--amber);margin-bottom:8px;}
+.footer-body{font-size:12px;color:var(--text3);line-height:1.7;max-width:500px;margin:0 auto 16px;}
+.footer-chips{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;}
+.footer-divider{height:1px;background:var(--border);max-width:400px;margin:0 auto 16px;}
+.footer-copy{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--text3);letter-spacing:1px;}
+
+/* ═══════════════════════════════════════════════
+   TOASTS & OVERLAYS
+═══════════════════════════════════════════════ */
+.detect-toast{
+  position:fixed;top:24px;left:50%;transform:translateX(-50%) translateY(-80px);
+  background:var(--bg2);border:1px solid rgba(34,197,94,0.4);border-radius:10px;
+  padding:12px 22px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 8px 40px rgba(0,0,0,0.7),0 0 0 1px rgba(34,197,94,0.1);
+  z-index:9999;transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1),opacity 0.4s;
+  opacity:0;
+}
+.detect-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+.toast-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:pulse 1.5s infinite;}
+.toast-txt{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--green);letter-spacing:0.5px;}
+
+.action-toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);
+  background:var(--bg2);border:1px solid var(--border2);border-radius:8px;
+  padding:10px 20px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--text2);
+  letter-spacing:0.5px;z-index:9999;box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  transition:transform 0.3s ease,opacity 0.3s ease;opacity:0;pointer-events:none;
+}
+.action-toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+
+/* ═══════════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════════ */
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+@keyframes slideIn{from{opacity:0;transform:translateX(14px);}to{opacity:1;transform:translateX(0);}}
+@keyframes litpulse{0%,100%{box-shadow:0 0 0 2px rgba(245,166,35,0.08);}50%{box-shadow:0 0 0 4px rgba(245,166,35,0.3),0 0 20px rgba(245,166,35,0.15);}}
+.fade-in{animation:fadeIn 0.35s ease both;}
+.slide-in{animation:slideIn 0.3s ease both;}
+.detecting{animation:litpulse 1s ease 3;}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .tms-win{width:100%;max-width:820px;}
+  .hstat{padding:10px 20px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     TOASTS
+═══════════════════════════════════════════════ -->
+<div class="detect-toast" id="detectToast">
+  <div class="toast-dot"></div>
+  <div class="toast-txt">⚡ Route auto-detected: Toronto → Montréal</div>
+</div>
+<div class="action-toast" id="actionToast"></div>
+
+<!-- ═══════════════════════════════════════════════
+     HERO
+═══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-badge">
+    <div class="hero-badge-dot"></div>
+    Chrome Extension · Manifest V3 · AI-Powered
+  </div>
+  <h1>FuelRoute Pro</h1>
+  <p class="hero-sub">
+    The <strong>AI dispatch co-pilot</strong> that finds the cheapest fuel stops
+    along every Canadian trucking route — right inside your TMS, in real time.
+  </p>
+
+  <div class="hero-stats">
+    <div class="hstat">
+      <div class="hstat-v">$407K</div>
+      <div class="hstat-l">Annual savings · 50 trucks</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-v">$0.064</div>
+      <div class="hstat-l">Avg savings per litre</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-v">6</div>
+      <div class="hstat-l">Ranked stops per route</div>
+    </div>
+    <div class="hstat">
+      <div class="hstat-v">9</div>
+      <div class="hstat-l">TMS platforms supported</div>
+    </div>
+  </div>
+
+  <div class="hero-chips">
+    <span class="chip green">✓ No fuel card lock-in</span>
+    <span class="chip green">✓ Real highway routing via OSRM</span>
+    <span class="chip green">✓ Reefer unit optimization</span>
+    <span class="chip">Rose Rocket</span>
+    <span class="chip">Samsara</span>
+    <span class="chip">Motive</span>
+    <span class="chip">Geotab</span>
+    <span class="chip amber">+ 5 more TMS platforms</span>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════════════════ -->
+<section class="how">
+  <div class="section-label">How it works</div>
+  <div class="section-title">Three Steps. Zero Effort.</div>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">STEP 01</div>
+      <span class="step-icon">🗺️</span>
+      <div class="step-title">Auto-Detect Route</div>
+      <div class="step-body">The extension reads the origin and destination directly from your TMS form — no copy-paste, no re-entry. Works on Rose Rocket, Samsara, Motive, Geotab and more.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 02</div>
+      <span class="step-icon">📡</span>
+      <div class="step-title">Map the Real Highway</div>
+      <div class="step-body">Geocodes both endpoints, then calls the OSRM routing engine to trace the actual highway. Samples 6 GPS waypoints along the route so Claude knows exactly which towns you'll pass through.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 03</div>
+      <span class="step-icon">⚡</span>
+      <div class="step-title">AI Ranks Your Fuel Stops</div>
+      <div class="step-body">Claude analyzes prices at stations near each waypoint, calculates <strong>net savings after detour cost</strong>, and ranks by value — not just lowest price. A $1.75/L station 60km off-route ranks below a $1.81/L station on the highway. Reefer savings calculated separately.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">STEP 04</div>
+      <span class="step-icon">💰</span>
+      <div class="step-title">See Fleet-Wide Savings</div>
+      <div class="step-body">Flip to the Savings tab for a live rollup — per truck, per fill, weekly, monthly, and annual projections for your entire fleet. Updates instantly when you change fleet size or fill frequency.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FEATURES
+═══════════════════════════════════════════════ -->
+<section class="features">
+  <div class="section-label">Built for Canadian Fleet Operations</div>
+  <div class="section-title">Every Feature Dispatcher-First</div>
+  <div class="feat-grid">
+    <div class="fcard">
+      <div class="fcard-icon">🔌</div>
+      <div class="fcard-title">Works Inside Your TMS</div>
+      <div class="fcard-body">A slim sidebar slides into Rose Rocket, Samsara, Motive, Geotab, KeepTruckin, Omnitracs, FleetComplete, Trimble, and ReeférTek — <strong>no tab switching</strong>, no separate app.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">🛣️</div>
+      <div class="fcard-title">Real Highway Routing</div>
+      <div class="fcard-body">Uses free OSRM routing (same engine as OSRM.org) to trace the actual Trans-Canada or US Interstate path. Stations are <strong>on your route</strong>, not in the wrong direction.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">🤖</div>
+      <div class="fcard-title">Claude AI Analysis</div>
+      <div class="fcard-body">Powered by Anthropic's Claude. Understands <strong>detour cost vs. price savings</strong> — won't recommend a cheap station that wastes more in fuel getting there.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">⛽</div>
+      <div class="fcard-title">Diesel + Gasoline</div>
+      <div class="fcard-body">Handles long-haul diesel rigs and lighter gasoline fleets. Tracks DEF availability, truck stop amenities, <strong>cardlock stations</strong>, and commercial discount lanes.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">🧊</div>
+      <div class="fcard-title">Reefer Unit Optimization</div>
+      <div class="fcard-body">Enable the reefer toggle to track your temperature unit's red dyed diesel separately. <strong>Tax-exempt savings calculated independently</strong> — the avg $0.15/L tax advantage is factored into every stop recommendation.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">🔑</div>
+      <div class="fcard-title">Your Key, Your Data</div>
+      <div class="fcard-body">Connects directly to Anthropic using your own API key. <strong>Zero routing through third-party servers</strong> — route data and fuel analysis stay between you and Claude.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">📋</div>
+      <div class="fcard-title">Dispatch Log & Annualized ROI</div>
+      <div class="fcard-body">Every confirmed fuel stop is logged. The Log tab builds a running record of actual dispatches and <strong>projects annualized savings from real data</strong> — shareable with management at any time.</div>
+    </div>
+    <div class="fcard">
+      <div class="fcard-icon">📊</div>
+      <div class="fcard-title">Fleet Savings Dashboard</div>
+      <div class="fcard-body">Enter your fleet size and fill frequency once. Get live projections: <strong>weekly, monthly, and annual savings</strong> across your entire fleet — ready for management reporting.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     PLATFORMS
+═══════════════════════════════════════════════ -->
+<section class="platforms">
+  <div class="section-label">Supported Platforms</div>
+  <div class="section-title" style="margin-bottom:8px;">Works Where You Dispatch</div>
+  <div style="font-size:12px;color:var(--text3);margin-bottom:20px;font-family:'IBM Plex Mono',monospace;">Auto-injects into all major TMS and ELD platforms</div>
+  <div class="plat-list">
+    <div class="plat-tag">Rose Rocket</div>
+    <div class="plat-tag">Samsara</div>
+    <div class="plat-tag">Motive (KeepTruckin)</div>
+    <div class="plat-tag">Geotab</div>
+    <div class="plat-tag">Omnitracs</div>
+    <div class="plat-tag">FleetComplete</div>
+    <div class="plat-tag">Trimble</div>
+    <div class="plat-tag">ReeférTek</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     INTERACTIVE DEMO
+═══════════════════════════════════════════════ -->
+<section class="demo-section">
+  <div class="section-label">Live Demo</div>
+  <div class="section-title">Try It Right Now</div>
+  <div class="demo-caption">Every button is functional · No API key needed · Edit the origin & destination</div>
+
+  <div class="demo-wrap">
+
+    <!-- POPUP WINDOW -->
+    <div class="chrome-win">
+      <div class="win-label">Popup — click the ⛽ toolbar icon</div>
+      <div class="chrome-bar" style="width:340px;">
+        <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+        <div class="url-bar"><span class="url-lock">🔒</span> app.rosrocket.com/orders/new</div>
+        <button class="toolbar-ext" id="toolbarBtn">⛽<span class="ext-tooltip">FuelRoute Pro</span></button>
+      </div>
+      <div class="popup-panel">
+        <div class="pop-hdr">
+          <div class="logo-icon">⛽</div>
+          <div>
+            <div class="logo-name">FuelRoute Pro</div>
+            <div class="logo-sub">Fleet Fuel Intelligence</div>
+          </div>
+        </div>
+        <div class="pop-body">
+          <div class="status-row active" id="popStatus">
+            <div class="sdot green" id="popDot"></div>
+            <div class="stxt green" id="popTxt">✓ Route detected — Toronto → Montréal</div>
+          </div>
+
+          <div class="psec">Anthropic API Key</div>
+          <div class="key-display">
+            <span>sk-ant-...a8F3kQ</span>
+            <span style="font-size:10px;color:var(--green);">✓ Verified</span>
+          </div>
+          <div class="btn-row-2" style="margin-bottom:16px;">
+            <button class="btn-sec" id="changeKeyBtn">CHANGE KEY</button>
+            <button class="btn-danger" id="removeKeyBtn">REMOVE KEY</button>
+          </div>
+
+          <div class="pdivider"></div>
+          <div class="psec">Fleet Defaults</div>
+          <div class="pfield">
+            <label>Fleet Size (trucks)</label>
+            <input type="number" id="popFleet" value="50" min="1" max="500">
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px;">
+            <div class="pfield">
+              <label>Tank Size (L)</label>
+              <input type="number" id="popTank" value="1020" min="200" max="1500">
+            </div>
+            <div class="pfield">
+              <label>Fills / Week</label>
+              <input type="number" id="popFills" value="3" min="1" max="14">
+            </div>
+          </div>
+          <button class="btn-primary" id="saveFleetBtn">SAVE DEFAULTS</button>
+        </div>
+        <div class="pfooter">
+          <a href="https://console.anthropic.com" target="_blank">Anthropic Console ↗</a>
+          <span class="ver">v1.0.0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- TMS WINDOW + SIDEBAR -->
+    <div class="chrome-win">
+      <div class="win-label">TMS Page (Rose Rocket) — FuelRoute Pro auto-injected</div>
+      <div class="chrome-bar" style="width:820px;">
+        <div class="dot-r"></div><div class="dot-y"></div><div class="dot-g"></div>
+        <div class="url-bar"><span class="url-lock">🔒</span> app.rosrocket.com/orders/new</div>
+        <button class="toolbar-ext" id="toolbarBtn2">⛽<span class="ext-tooltip">Toggle sidebar</span></button>
+      </div>
+      <div class="tms-win">
+
+        <div class="tms-nav">
+          <div class="nav-logo">RoseRocket</div>
+          <div class="nav-item">Dashboard</div>
+          <div class="nav-item active">Orders</div>
+          <div class="nav-item">Dispatch</div>
+          <div class="nav-item">Drivers</div>
+          <div class="nav-item">Reports</div>
+        </div>
+
+        <div class="tms-body">
+          <div class="form-title">New Order <span class="badge">DRAFT</span></div>
+          <div class="form-sub">Fill in the load details below. FuelRoute Pro will scan fuel stops along this route automatically.</div>
+
+          <div style="margin-bottom:16px;">
+            <div class="tf" style="margin-bottom:12px;">
+              <label>Pickup Location</label>
+              <input class="tinput lit detecting" id="tmsOrigin" value="Toronto, ON">
+              <div class="hint show" id="hintOrigin">⚡ Detected by FuelRoute Pro</div>
+            </div>
+            <div class="tf">
+              <label>Delivery Location</label>
+              <input class="tinput lit detecting" id="tmsDest" value="Montréal, QC">
+              <div class="hint show" id="hintDest">⚡ Detected by FuelRoute Pro</div>
+            </div>
+          </div>
+
+          <div class="tms-grid">
+            <div class="tf"><label>Pickup Date</label><input class="tinput" value="2026-04-07"></div>
+            <div class="tf"><label>Delivery Date</label><input class="tinput" value="2026-04-08"></div>
+          </div>
+          <div class="tms-grid">
+            <div class="tf"><label>Commodity</label><input class="tinput" value="General Freight"></div>
+            <div class="tf"><label>Weight (kg)</label><input class="tinput" value="18,500"></div>
+          </div>
+          <div class="tms-grid">
+            <div class="tf"><label>Driver</label><input class="tinput" value="R. Marchetti"></div>
+            <div class="tf"><label>Unit #</label><input class="tinput" value="T-114"></div>
+          </div>
+
+          <div class="tms-actions">
+            <button class="tsave" id="tmsSaveBtn">SAVE ORDER</button>
+            <button class="tcancel" id="tmsCancelBtn">CANCEL</button>
+          </div>
+        </div>
+
+        <!-- INJECTED SIDEBAR -->
+        <div class="sb-host open" id="sbHost">
+          <button class="sb-tab" id="sbTab">⛽ FUEL</button>
+          <div class="sb-panel">
+
+            <div class="sb-hdr">
+              <div class="sb-logo">
+                <div class="sb-logo-ic">⛽</div>
+                <div>
+                  <div class="sb-logo-n">FuelRoute Pro</div>
+                  <div class="sb-logo-s">Fuel Intelligence</div>
+                </div>
+              </div>
+              <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+            </div>
+
+            <div class="plat-banner show">
+              <span>✓</span><span>Route auto-detected from Rose Rocket</span>
+            </div>
+
+            <div class="tabs">
+              <button class="tbtn active" id="tbStations">⛽ Stations</button>
+              <button class="tbtn" id="tbSavings">💰 Savings</button>
+              <button class="tbtn" id="tbLog">📋 Log</button>
+            </div>
+
+            <div class="sb-body" id="sbBody">
+
+              <div id="sbForm">
+                <div class="auto-badge">⚡ AUTO-DETECTED</div>
+                <div class="sf"><label>Origin</label><input id="sbOrigin" value="Toronto, ON"></div>
+                <div class="sf"><label>Destination</label><input id="sbDest" value="Montréal, QC"></div>
+                <div class="sf2">
+                  <div class="sf"><label>Fuel Type</label>
+                    <select id="sbFuel"><option selected>Diesel</option><option>Gasoline</option></select>
+                  </div>
+                  <div class="sf"><label>Tank (L)</label><input id="sbTank" type="number" value="1020"></div>
+                </div>
+                <div class="sf2">
+                  <div class="sf"><label>Fill %</label>
+                    <select id="sbPct">
+                      <option value="50">50%</option><option value="60">60%</option>
+                      <option value="70">70%</option><option value="80" selected>80%</option>
+                      <option value="90">90%</option><option value="100">100%</option>
+                    </select>
+                  </div>
+                  <div class="sf"><label>Fleet Size</label><input id="sbFleet" type="number" value="50"></div>
+                </div>
+                <div class="reefer-row">
+                  <input type="checkbox" id="reeferChk" class="toggle-chk">
+                  <label for="reeferChk" class="toggle-lbl">Reefer Unit</label>
+                </div>
+                <div id="reeferFields" class="reefer-fields" style="display:none;">
+                  <div class="sf" style="margin-bottom:0;">
+                    <label>Reefer Tank (L)</label>
+                    <select id="reeferTank">
+                      <option value="190" selected>190L — Standard (50 gal)</option>
+                      <option value="285">285L — Large (75 gal)</option>
+                      <option value="380">380L — Extended (100 gal)</option>
+                    </select>
+                  </div>
+                  <div class="reefer-note">Red dyed diesel · Tax-exempt · ~$0.10–$0.25/L cheaper than tractor diesel</div>
+                </div>
+                <div class="fill-row">
+                  <span class="fill-label">Fill Volume</span>
+                  <span class="fill-val" id="fillVol">816L</span>
+                </div>
+                <button class="run-btn" id="runBtn">⚡ FIND CHEAPEST FUEL</button>
+              </div>
+
+              <div class="sb-divider" id="sbDivider" style="display:none;"></div>
+
+              <!-- LOADING -->
+              <div class="loading-wrap" id="loadingWrap">
+                <div class="spinner-ring"></div>
+                <div class="load-steps">
+                  <div class="lstep" id="ls1"><span class="lstep-icon">🗺️</span>Geocoding route endpoints…</div>
+                  <div class="lstep" id="ls2"><span class="lstep-icon">🛣️</span>Tracing highway via OSRM…</div>
+                  <div class="lstep" id="ls3"><span class="lstep-icon">📍</span>Sampling 6 GPS waypoints…</div>
+                  <div class="lstep" id="ls4"><span class="lstep-icon">🤖</span>Claude scanning fuel prices…</div>
+                  <div class="lstep" id="ls5"><span class="lstep-icon">📊</span>Ranking stations by net savings…</div>
+                </div>
+              </div>
+
+              <!-- RESULTS: STATIONS -->
+              <div class="results-wrap" id="resStations">
+                <div class="sb-sec">Ranked Fuel Stops</div>
+                <div class="rec-box">
+                  <div class="rec-title"><span>✓</span> Dispatcher Recommendation</div>
+                  <div class="rec-body">
+                    Fuel at <strong>Petro-Pass Cardlock — Kingston</strong>.
+                    Price <strong>$1.769/L</strong> vs avg <strong>$1.833/L</strong>
+                    — saves <strong>$52.22/fill</strong> after all detour cost.
+                  </div>
+                </div>
+
+                <div class="scard best slide-in" style="animation-delay:0.05s">
+                  <div class="scard-top">
+                    <div class="scard-left">
+                      <div class="scard-name">Petro-Pass Cardlock</div>
+                      <div class="scard-loc">Kingston, ON · 167km from origin</div>
+                    </div>
+                    <div class="scard-right">
+                      <div class="scard-price pg">$1.769</div>
+                      <div class="rbadge r1">1</div>
+                    </div>
+                  </div>
+                  <div class="scard-bot">
+                    <div class="net net-pos">+$52.22/fill</div>
+                    <div class="detour-lbl">On route</div>
+                  </div>
+                  <div class="atags">
+                    <span class="atag">DEF</span><span class="atag">Scales</span><span class="atag">24hr</span><span class="atag">Commercial lane</span>
+                  </div>
+                </div>
+
+                <div class="scard slide-in" style="animation-delay:0.12s">
+                  <div class="scard-top">
+                    <div class="scard-left">
+                      <div class="scard-name">Husky Truck Stop</div>
+                      <div class="scard-loc">Belleville, ON · 186km</div>
+                    </div>
+                    <div class="scard-right">
+                      <div class="scard-price pa">$1.809</div>
+                      <div class="rbadge r2">2</div>
+                    </div>
+                  </div>
+                  <div class="scard-bot">
+                    <div class="net net-pos">+$17.63/fill</div>
+                    <div class="detour-lbl">+3km</div>
+                  </div>
+                  <div class="atags"><span class="atag">Restaurant</span><span class="atag">Showers</span><span class="atag">DEF</span></div>
+                </div>
+
+                <div class="scard uneconomical slide-in" style="animation-delay:0.19s">
+                  <div class="scard-top">
+                    <div class="scard-left">
+                      <div class="scard-name">Flying J Travel Centre</div>
+                      <div class="scard-loc">Napanee, ON · 204km</div>
+                    </div>
+                    <div class="scard-right">
+                      <div class="scard-price pd">$1.829</div>
+                      <div class="rbadge rn">3</div>
+                    </div>
+                  </div>
+                  <div class="scard-bot">
+                    <div class="net net-neg">−$1.29/fill</div>
+                    <div class="detour-lbl">+7km</div>
+                  </div>
+                  <div class="atags"><span class="atag">Showers</span><span class="atag">Lounge</span><span class="atag">DEF</span></div>
+                  <div class="warn-badge">⚠ DETOUR UNECONOMICAL</div>
+                </div>
+
+                <div class="scard uneconomical slide-in" style="animation-delay:0.26s">
+                  <div class="scard-top">
+                    <div class="scard-left">
+                      <div class="scard-name">Shell (Hwy 401)</div>
+                      <div class="scard-loc">Gananoque, ON · 231km</div>
+                    </div>
+                    <div class="scard-right">
+                      <div class="scard-price pd">$1.859</div>
+                      <div class="rbadge rn">4</div>
+                    </div>
+                  </div>
+                  <div class="scard-bot">
+                    <div class="net net-neg">−$24.47/fill</div>
+                    <div class="detour-lbl">+5km</div>
+                  </div>
+                  <div class="warn-badge">⚠ DETOUR UNECONOMICAL</div>
+                </div>
+
+                <div class="scard uneconomical slide-in" style="animation-delay:0.33s">
+                  <div class="scard-top">
+                    <div class="scard-left">
+                      <div class="scard-name">Esso Brockville</div>
+                      <div class="scard-loc">Brockville, ON · 250km</div>
+                    </div>
+                    <div class="scard-right">
+                      <div class="scard-price pd">$1.879</div>
+                      <div class="rbadge rn">5</div>
+                    </div>
+                  </div>
+                  <div class="scard-bot">
+                    <div class="net net-neg">−$37.54/fill</div>
+                    <div class="detour-lbl">On route</div>
+                  </div>
+                  <div class="warn-badge">⚠ DETOUR UNECONOMICAL</div>
+                </div>
+
+                <div class="scard uneconomical slide-in" style="animation-delay:0.40s">
+                  <div class="scard-top">
+                    <div class="scard-left">
+                      <div class="scard-name">Petro-Canada Vaudreuil</div>
+                      <div class="scard-loc">Vaudreuil-Dorion, QC · 489km</div>
+                    </div>
+                    <div class="scard-right">
+                      <div class="scard-price pd">$1.899</div>
+                      <div class="rbadge rn">6</div>
+                    </div>
+                  </div>
+                  <div class="scard-bot">
+                    <div class="net net-neg">−$53.86/fill</div>
+                    <div class="detour-lbl">On route</div>
+                  </div>
+                  <div class="warn-badge">⚠ DETOUR UNECONOMICAL</div>
+                </div>
+
+              </div><!-- /resStations -->
+
+              <!-- RESULTS: SAVINGS -->
+              <div class="results-wrap" id="resSavings">
+                <div class="sb-sec">Per Truck · Per Fill</div>
+                <div class="save-grid">
+                  <div class="sc"><div class="sc-l">Save / litre</div><div class="sc-v a">$0.064</div><div class="sc-s">vs avg $1.833/L</div></div>
+                  <div class="sc"><div class="sc-l">Net / fill</div><div class="sc-v g">$52.22</div><div class="sc-s">816L · after detour cost</div></div>
+                </div>
+                <div class="sb-sec">Fleet Rollup</div>
+                <div class="save-grid">
+                  <div class="sc"><div class="sc-l">Weekly · 1 truck</div><div class="sc-v a" id="sv1">$156.66</div><div class="sc-s">3 fills/wk</div></div>
+                  <div class="sc"><div class="sc-l">Weekly fleet</div><div class="sc-v g" id="sv2">$7.8K</div><div class="sc-s" id="sv2s">50 trucks</div></div>
+                  <div class="sc"><div class="sc-l">Monthly fleet</div><div class="sc-v b" id="sv3">$33.9K</div><div class="sc-s">~4.33 wks/mo</div></div>
+                  <div class="sc"><div class="sc-l">Annual fleet</div><div class="sc-v g" id="sv4" style="font-size:28px;">$407K</div><div class="sc-s" id="sv4s">50 trucks · 52 wks</div></div>
+                </div>
+              </div>
+
+              <!-- RESULTS: LOG -->
+              <div class="results-wrap" id="resLog">
+                <div class="sb-sec">Confirmed Dispatch Savings</div>
+                <div class="log-sum-grid">
+                  <div class="lsc"><div class="lsc-l">Dispatches</div><div class="lsc-v a">7</div><div class="lsc-s">confirmed stops</div></div>
+                  <div class="lsc"><div class="lsc-l">Total Saved</div><div class="lsc-v g">$486</div><div class="lsc-s">actual net savings</div></div>
+                  <div class="lsc"><div class="lsc-l">This Month</div><div class="lsc-v b">$322</div><div class="lsc-s">April 2026</div></div>
+                  <div class="lsc"><div class="lsc-l">Litres Optimized</div><div class="lsc-v" style="color:var(--text);font-size:18px;">5,712L</div><div class="lsc-s">across all fills</div></div>
+                </div>
+                <div class="ann-box">
+                  <div class="ann-lbl">Annualized Projection from Real Data</div>
+                  <div class="ann-val">$407K</div>
+                  <div class="ann-sub">based on 7 confirmed dispatches · 3 fills/wk · 50 trucks</div>
+                </div>
+                <div class="sb-sec">Dispatch History</div>
+                <div class="log-entry slide-in" style="animation-delay:0.05s">
+                  <div class="log-body">
+                    <div class="log-top"><span class="log-date">Apr 7</span><span class="log-net">+$52.22</span></div>
+                    <div class="log-stn">Petro-Pass Cardlock</div>
+                    <div class="log-route">Toronto → Montréal</div>
+                    <div class="log-meta">816L · $1.769/L · T-114</div>
+                  </div>
+                </div>
+                <div class="log-entry slide-in" style="animation-delay:0.12s">
+                  <div class="log-body">
+                    <div class="log-top"><span class="log-date">Apr 5</span><span class="log-net">+$35.90</span></div>
+                    <div class="log-stn">Pioneer Cardlock</div>
+                    <div class="log-route">Kingston → Ottawa</div>
+                    <div class="log-meta">816L · $1.789/L · T-107</div>
+                  </div>
+                </div>
+                <div class="log-entry slide-in" style="animation-delay:0.19s">
+                  <div class="log-body">
+                    <div class="log-top"><span class="log-date">Apr 3</span><span class="log-net">+$17.63</span></div>
+                    <div class="log-stn">Husky Truck Stop</div>
+                    <div class="log-route">Brockville → Montréal</div>
+                    <div class="log-meta">816L · $1.809/L · T-092</div>
+                  </div>
+                </div>
+              </div><!-- /resLog -->
+
+            </div><!-- /sb-body -->
+          </div><!-- /sb-panel -->
+        </div><!-- /sb-host -->
+
+      </div><!-- /tms-win -->
+    </div><!-- /chrome-win -->
+
+  </div><!-- /demo-wrap -->
+</section>
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+═══════════════════════════════════════════════ -->
+<footer class="site-footer">
+  <div class="footer-logo">⛽ FuelRoute Pro</div>
+  <div class="footer-body">
+    A Chrome Extension built for Canadian fleet operators. Dispatch smarter,
+    fuel cheaper, report savings to management — all without leaving your TMS.
+  </div>
+  <div class="footer-chips">
+    <span class="chip">Chrome Extension · MV3</span>
+    <span class="chip">AI by Anthropic Claude</span>
+    <span class="chip">Routing by OSRM</span>
+    <span class="chip">Geocoding by OpenStreetMap</span>
+  </div>
+  <div class="footer-divider"></div>
+  <div class="footer-copy">© 2026 Seaway Beverage Group Inc. · FuelRoute Pro v1.0.0</div>
+</footer>
+
+<script>
+(function(){
+"use strict";
+
+function $(id){ return document.getElementById(id); }
+const fmt  = n => `$${(+n||0).toFixed(2)}`;
+const fmtK = n => { n=+n||0; if(n>=1e6) return `$${(n/1e6).toFixed(2)}M`; if(n>=1e3) return `$${(n/1e3).toFixed(1)}K`; return fmt(n); };
+
+let hasResults = false;
+let currentTab = 'stations';
+let sbOpen = true;
+
+// ── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg, dur=2800){
+  const t = $('actionToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), dur);
+}
+
+// ── SIDEBAR TOGGLE ────────────────────────────────────────────────────────────
+function toggleSidebar(){
+  sbOpen = !sbOpen;
+  $('sbHost').classList.toggle('open', sbOpen);
+}
+$('sbTab').addEventListener('click', toggleSidebar);
+
+// ── TMS NAV ───────────────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-item').forEach(el=>{
+  el.addEventListener('click',()=>{
+    document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+    el.classList.add('active');
+  });
+});
+
+// ── TMS ↔ SIDEBAR SYNC ────────────────────────────────────────────────────────
+$('tmsOrigin').addEventListener('input', e=>{
+  $('sbOrigin').value = e.target.value;
+  $('hintOrigin').classList.toggle('show', !!e.target.value.trim());
+});
+$('tmsDest').addEventListener('input', e=>{
+  $('sbDest').value = e.target.value;
+  $('hintDest').classList.toggle('show', !!e.target.value.trim());
+});
+$('sbOrigin').addEventListener('input', e=>{ $('tmsOrigin').value = e.target.value; });
+$('sbDest').addEventListener('input',   e=>{ $('tmsDest').value   = e.target.value; });
+$('popFleet').addEventListener('input', e=>{ $('sbFleet').value   = e.target.value; recalcSavings(); });
+
+// ── FILL VOLUME ───────────────────────────────────────────────────────────────
+function updateFillVol(){
+  const tL = Math.round((+$('sbTank').value||1020)*(+$('sbPct').value||80)/100);
+  const reeferOn = $('reeferChk').checked;
+  const rL = reeferOn ? Math.round((+$('reeferTank').value||190)*(+$('sbPct').value||80)/100) : 0;
+  $('fillVol').textContent = reeferOn ? (tL+'L + '+rL+'L = '+(tL+rL)+'L') : tL+'L';
+}
+$('sbTank').addEventListener('input', updateFillVol);
+$('sbPct').addEventListener('change', updateFillVol);
+
+// ── REEFER TOGGLE ─────────────────────────────────────────────────────────────
+$('reeferChk').addEventListener('change', e=>{
+  $('reeferFields').style.display = e.target.checked ? 'block' : 'none';
+  updateFillVol();
+});
+$('reeferTank').addEventListener('change', updateFillVol);
+
+// ── SAVINGS RECALC ────────────────────────────────────────────────────────────
+function recalcSavings(){
+  const fleet = +$('sbFleet').value||50;
+  const fills = +$('popFills').value||3;
+  const net   = 52.22;
+  $('sv1').textContent  = fmt(net*fills);
+  $('sv2').textContent  = fmtK(net*fills*fleet);   $('sv2s').textContent = fleet+' trucks';
+  $('sv3').textContent  = fmtK(net*fills*fleet*4.33);
+  $('sv4').textContent  = fmtK(net*fills*fleet*52); $('sv4s').textContent = fleet+' trucks · 52 wks';
+}
+$('sbFleet').addEventListener('input', recalcSavings);
+$('popFills').addEventListener('input', recalcSavings);
+
+// ── SIDEBAR TABS ──────────────────────────────────────────────────────────────
+function switchTab(tab){
+  currentTab = tab;
+  $('tbStations').classList.toggle('active', tab==='stations');
+  $('tbSavings').classList.toggle('active',  tab==='savings');
+  $('tbLog').classList.toggle('active',      tab==='log');
+  if(hasResults){
+    $('resStations').classList.toggle('show', tab==='stations');
+    $('resSavings').classList.toggle('show',  tab==='savings');
+    $('resLog').classList.toggle('show',      tab==='log');
+  } else if(tab==='log'){
+    // Log is always accessible, even without a fresh analysis
+    $('resLog').classList.add('show');
+    $('sbDivider').style.display = 'block';
+  } else {
+    $('resLog').classList.remove('show');
+  }
+}
+$('tbStations').addEventListener('click', ()=>switchTab('stations'));
+$('tbSavings').addEventListener('click',  ()=>switchTab('savings'));
+$('tbLog').addEventListener('click',      ()=>switchTab('log'));
+
+// ── LOADING STEPS ANIMATION ───────────────────────────────────────────────────
+const STEPS = [
+  {id:'ls1', delay:0,    dur:700},
+  {id:'ls2', delay:700,  dur:600},
+  {id:'ls3', delay:1300, dur:400},
+  {id:'ls4', delay:1700, dur:900},
+  {id:'ls5', delay:2600, dur:400},
+];
+function animateSteps(){
+  STEPS.forEach(({id, delay, dur})=>{
+    setTimeout(()=>{ $(id).classList.add('active'); }, delay);
+    setTimeout(()=>{ $(id).classList.remove('active'); $(id).classList.add('done'); }, delay+dur);
+  });
+}
+function resetSteps(){
+  STEPS.forEach(({id})=>{ $(id).className='lstep'; });
+}
+
+// ── FIND CHEAPEST FUEL ────────────────────────────────────────────────────────
+$('runBtn').addEventListener('click', ()=>{
+  if($('runBtn').disabled) return;
+
+  hasResults = false;
+  $('resStations').classList.remove('show');
+  $('resSavings').classList.remove('show');
+  $('resLog').classList.remove('show');
+  $('sbDivider').style.display = 'none';
+
+  $('runBtn').disabled = true;
+  $('runBtn').textContent = '⟳  ANALYZING ROUTE...';
+  resetSteps();
+  $('loadingWrap').classList.add('show');
+  animateSteps();
+
+  setTimeout(()=>{
+    $('loadingWrap').classList.remove('show');
+    $('runBtn').disabled = false;
+    $('runBtn').textContent = '⚡ FIND CHEAPEST FUEL';
+    $('sbDivider').style.display = 'block';
+
+    hasResults = true;
+    recalcSavings();
+    switchTab(currentTab);
+
+    // Re-trigger card animations
+    document.querySelectorAll('.scard').forEach((c,i)=>{
+      c.style.animation = 'none';
+      requestAnimationFrame(()=>requestAnimationFrame(()=>{ c.style.animation=''; }));
+    });
+
+    showToast('✓ Found 6 stops — Petro-Pass Kingston saves $52.22/fill');
+    if(!sbOpen) toggleSidebar();
+
+  }, 3200);
+});
+
+// ── POPUP: SAVE FLEET ─────────────────────────────────────────────────────────
+$('saveFleetBtn').addEventListener('click', ()=>{
+  $('saveFleetBtn').textContent = '✓  SAVED!';
+  $('saveFleetBtn').style.background = 'var(--green)';
+  $('saveFleetBtn').style.color = '#fff';
+  recalcSavings();
+  showToast('Fleet saved: '+$('popFleet').value+' trucks, '+$('popFills').value+' fills/wk, '+$('popTank').value+'L tank');
+  setTimeout(()=>{
+    $('saveFleetBtn').textContent = 'SAVE DEFAULTS';
+    $('saveFleetBtn').style.background = '';
+    $('saveFleetBtn').style.color = '';
+  }, 1800);
+});
+
+// ── POPUP: CHANGE / REMOVE KEY ────────────────────────────────────────────────
+$('changeKeyBtn').addEventListener('click', ()=>{
+  showToast('🔑 Opens the API key input field in the real extension');
+});
+$('removeKeyBtn').addEventListener('click', ()=>{
+  $('popDot').className = 'sdot amber';
+  $('popTxt').className = 'stxt amber';
+  $('popTxt').textContent = '⚠  No API key — add one below';
+  $('popStatus').classList.remove('active');
+  showToast('Key removed — sidebar will show setup screen', 3000);
+  setTimeout(()=>{
+    $('popDot').className = 'sdot green';
+    $('popTxt').className = 'stxt green';
+    $('popTxt').textContent = '✓ Route detected — Toronto → Montréal';
+    $('popStatus').classList.add('active');
+  }, 3200);
+});
+
+// ── TMS SAVE / CANCEL ─────────────────────────────────────────────────────────
+$('tmsSaveBtn').addEventListener('click', ()=>{
+  $('tmsSaveBtn').textContent = '✓  ORDER SAVED';
+  $('tmsSaveBtn').style.background = 'var(--green)';
+  showToast('Order saved — Unit T-114 · '+$('tmsOrigin').value+' → '+$('tmsDest').value);
+  setTimeout(()=>{
+    $('tmsSaveBtn').textContent = 'SAVE ORDER';
+    $('tmsSaveBtn').style.background = '';
+  }, 2200);
+});
+$('tmsCancelBtn').addEventListener('click', ()=>{
+  $('tmsOrigin').value = '';
+  $('tmsDest').value   = '';
+  $('hintOrigin').classList.remove('show');
+  $('hintDest').classList.remove('show');
+  $('tmsOrigin').classList.remove('lit','detecting');
+  $('tmsDest').classList.remove('lit','detecting');
+  showToast('Order discarded');
+});
+
+// ── TOOLBAR BUTTONS ───────────────────────────────────────────────────────────
+$('toolbarBtn').addEventListener('click', ()=>{
+  showToast('In Chrome: this opens the popup settings panel ↑');
+});
+$('toolbarBtn2').addEventListener('click', ()=>{
+  toggleSidebar();
+  showToast(sbOpen ? '▶ Sidebar opened' : '◀ Sidebar closed');
+});
+
+// ── DETECTION TOAST ON LOAD ───────────────────────────────────────────────────
+setTimeout(()=>{
+  const t = $('detectToast');
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 3800);
+}, 900);
+
+})();
+</script>
+</body>
+</html>
